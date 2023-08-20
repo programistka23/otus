@@ -1,13 +1,13 @@
 <script setup>
-	import { ref } from 'vue'
+  import { ref } from 'vue'
 
-	const props = defineProps({
-	  isSidebar: Boolean
-	})
+  const props = defineProps({
+    isSidebar: Boolean
+  })
 </script>
 
 <template>
-	<div class="sidebar-block" v-if="props.isSidebar">
+  <div class="sidebar-block" v-if="props.isSidebar">
     <v-layout>
       <v-navigation-drawer>
         <v-list nav>
@@ -17,13 +17,13 @@
       </v-navigation-drawer>
       <v-main style="height: 250px"></v-main>
     </v-layout>
-	</div>
+  </div>
 </template>
 
 <style scoped>
-	.v-navigation-drawer {
-		top: 64px !important;
-		bottom: 40px !important;
-		height: auto !important;
-	}
+  .v-navigation-drawer {
+    top: 64px !important;
+    bottom: 40px !important;
+    height: auto !important;
+  }
 </style>
