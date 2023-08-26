@@ -1,18 +1,23 @@
 <script setup>
   import { ref } from 'vue'
 
-  const emit = defineEmits(["toogleSidebar"]);
+  const emit = defineEmits(["toogleSidebar", "search"]);
 
   const toogleSidebar = () => {
     emit('toogleSidebar');
   };
 
+  const search = () => {
+    emit('search', searchValue);
+  };
+
   const props = defineProps({
     user: Object,
-    balance: Number,
+    balance:  Number,
     basket: Array
   })
 
+  const searchValue = ref("");
 </script>
 
 <template>
@@ -20,16 +25,13 @@
     <v-toolbar
       image="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
     >
-      <v-app-bar-nav-icon @click="toogleSidebar"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Vue test shop</v-toolbar-title>
-
+      <v-app-bar-nav-icon @click="toogleSidebar" style="color: white;"></v-app-bar-nav-icon>
+      <v-toolbar-title style="font-weight: bold; color: white;">Vue test shop</v-toolbar-title>
       <v-spacer></v-spacer>
-      
-      User: {{props.user.fio}}
-
+      <span style="color: white;">User: {{props.user.fio}}</span>
       <v-spacer></v-spacer>
-
+      <label style="color: white;">Search: <input type="text" v-model="searchValue" @input="search"/></label>
+      <v-spacer></v-spacer>
       <span style="color: white">Balance: {{props.balance}} $</span>
 
       <v-btn icon class="basket-btn">
@@ -48,5 +50,9 @@
   }
   .basket-btn {
     color: white;
+  }
+  input[type="text"] {
+    background: white;
+    padding: 2px 4px;
   }
 </style>
