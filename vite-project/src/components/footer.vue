@@ -1,7 +1,3 @@
-<script setup>
-  import { ref } from 'vue'
-</script>  
-
 <template>
   <v-layout>
     <v-footer class="d-flex flex-column">

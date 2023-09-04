@@ -1,25 +1,14 @@
 <script setup>
-  import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUpdated } from 'vue'
   import HeaderComponent from './components/header.vue'
   import MainComponent from './components/main.vue'
   import FooterComponent from './components/footer.vue'
-  import axios from 'axios'
+  import { useRouter, useRoute } from 'vue-router'
 
-  const arr = ref([]);
-  const filteredArr = ref([]);
-
-  onMounted(() => {
-    axios
-      .get('https://fakestoreapi.com/products')
-      .then((response) => {
-        arr.value = response.data;
-        filteredArr.value = response.data;
-      });
-  });
-  
   const user = ref({
     fio: 'Иванов Иван Иванович',
     email: 'ivanov@mail.ru',
+    phone: '+7 777 777 77 77',
     birthDate: '2000-01-01',
     city: 'New York',
     street: 'Wall Street',
@@ -27,27 +16,85 @@
   })
 
   const basket = ref([]);
+
   const balance = ref(100000);
   const isSidebar = ref(true);
+  const isAuth = ref(false);
+  const isAdded = ref(false);
+  const searchStr = ref("");
 
-  function onSearch(value) {
-    if (value.value) {
-      filteredArr.value = arr.value.filter(item => item.title.toLowerCase().indexOf(value.value.toLowerCase()) > 0)
+  const router = useRouter();
+
+  const addToBasket = (product) => {
+    var count = +product.count || 1;
+    var basketElem = basket.value.find((elem) => {
+      return elem.id === product.id;
+    })
+    if (basketElem) {
+      basketElem.count = +basketElem.count + count;
     } else {
-      filteredArr.value = arr.value;
+      basket.value.push({
+        id: product.id,
+        count: count
+      });
+    }
+    isAdded.value = true;
+    localStorage.setItem("basket", JSON.stringify(basket.value));
+  }
+
+  const updateBasket = () => {
+    if (localStorage.getItem("basket")) {
+      basket.value = JSON.parse(localStorage.getItem("basket"));
     }
   }
+
+  const login = (loginObj) => {
+    user.value.auth = loginObj;
+    localStorage.setItem("login", loginObj.login);
+    isAuth.value = false;
+    router.push('/New');
+  }
+
+  const logout = () => {
+    user.value.auth = "";
+    localStorage.removeItem("login");
+  }
+
+  onMounted(() => {
+    if (localStorage.getItem("login")) {
+      user.value.auth = {
+        login: localStorage.getItem("login"),
+        password: ""
+      }
+    }
+  })
 </script>
 
 <template>
   <div>
     <HeaderComponent @toogle-sidebar="isSidebar = !isSidebar"
-                     @search="onSearch($event)"
+                     @search="searchStr = $event"
                      :user="user"
-                     :balance="balance"/>
-    <MainComponent :products = "filteredArr"
+                     :balance="balance"
+                     :basket="basket"
+                     @update-basket="basket = $event"
+                     @logout="logout();"
+                     @showAuth="isAuth = true;"
+                     :is-main-page="isMainPage"
+    />
+    <MainComponent :search = "searchStr"
                    :user="user"
-                   :is-sidebar="isSidebar"/>
+                   :is-sidebar="isSidebar"
+                   :is-auth="isAuth"
+                   @add-to-basket="addToBasket($event);"
+                   @update-basket="updateBasket();"
+                   @login="login($event);"
+                   @close-auth="isAuth = false;"
+
+    />
+    <v-snackbar v-model="isAdded" timeout="2000">
+      Товар добавлен в корзину!
+    </v-snackbar>
     <FooterComponent/>
   </div>
 </template>

@@ -5,7 +5,7 @@
     isSidebar: Boolean
   })
 
-  const emit = defineEmits(["order", "newProduct", "homePage"]);
+  const emit = defineEmits(["order", "newProduct", "homePage", "login"]);
 
   const order = () => {
     emit('order');
@@ -15,6 +15,9 @@
   };
   const homePage = () => {
     emit('homePage');
+  };
+  const login = () => {
+    emit('login');
   };
 </script>
 
