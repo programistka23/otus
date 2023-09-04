@@ -24,6 +24,10 @@ const { handleSubmit } = useForm({
       if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
       return 'Must be a valid e-mail.'
     },
+    phone(value) {
+      if (/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(value)) return true
+      return 'Must be a valid phone number'
+    },
     agreement(value) {
       if (value === '1') return true
       return 'Must be checked.'
@@ -37,6 +41,7 @@ const { handleSubmit } = useForm({
 
 const fio = useField('fio');
 const email = useField('email');
+const phone = useField('phone');
 const house = useField('house');
 
 const birthDate = ref("");
@@ -50,6 +55,7 @@ const agreement = useField('agreement');
 onUpdated(() => {
   fio.value.value = props.user.fio;
   email.value.value = props.user.email;
+  phone.value.value = props.user.phone;
   birthDate.value = props.user.birthDate;
   city.value = props.user.city;
   street.value = props.user.street;
@@ -98,6 +104,11 @@ const onClose = () => {
                     v-model="email.value.value"
                     :error-messages="email.errorMessage.value"
                     label="E-mail"
+                />
+                <v-text-field
+                    v-model="phone.value.value"
+                    :error-messages="phone.errorMessage.value"
+                    label="Phone"
                 />
                 <v-text-field type="date" label="Date of Birth" v-model="birthDate"/>
               </div>

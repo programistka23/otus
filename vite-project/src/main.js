@@ -22,4 +22,38 @@ app.use(vuetify, {
   iconfont: 'mdi'
 });
 
+import ContentComponent from './components/content.vue'
+import Product from './views/productNew.vue'
+import Basket from './views/basket.vue'
+import ProductPage from './views/productPage.vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+
+const routes = [
+  { path: '/', component: ContentComponent },
+  { path: '/MainPage', component: ContentComponent, props: route => ({ search: route.query.search, filter: route.query.filter })},
+  { path: '/New', component: Product, meta: { requiresAuth: true } },
+  { path: '/Basket',
+    component: Basket,
+    props: route => ({ basket: route.query.basket })
+  },
+  { path: '/Product/:id', component: ProductPage, meta: { requiresAuth: true } },
+]
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !localStorage.getItem("login")) {
+    alert('User is not authorized!');
+    return {
+      path: "/"
+    }
+  } else {
+    next();
+  }
+})
+
+app.use(router);
+
 app.mount('#app');
