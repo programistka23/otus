@@ -35,7 +35,7 @@
     router.push('/MainPage?search=' + searchValue.value + filterStr)
   }
 
-  const isMainPage = ref(false);
+  const isMainPage = ref(true);
 
   watch(() => route.path, () => {
     var currentRoute = router.currentRoute.value.path;
