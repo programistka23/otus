@@ -1,8 +1,9 @@
 <script setup>
   import { ref, onMounted, watch, onUpdated } from 'vue'
-  import ProductCard from './productItem.vue'
-  import axios from 'axios'
-  import { useCatalogStore } from "../stores/catalog";
+  import ProductItem from './productItem.vue'
+  import { useStore } from "../stores/store";
+
+  const store = useStore();
 
   const emit = defineEmits("addToBasket");
 
@@ -11,24 +12,23 @@
     filter: String
   })
 
-  const arr = ref([]);
-  const filteredArr = ref([]);
+  const items = ref([]);
 
   const update = () => {
     if (props.search) {
-      filteredArr.value = arr.value.filter(item => item.title.toLowerCase().indexOf(props.search.toLowerCase()) > 0)
+      items.value = store.catalog.filter(item => item.title.toLowerCase().indexOf(props.search.toLowerCase()) > 0)
     } else {
-      filteredArr.value = arr.value;
+      items.value = store.catalog;
     }
     if (props.filter) {
-      onFilter();
+      items.value = store.getFiltered(props.filter, items.value);
     }
   }
 
   onMounted(() => {
-    catalogStore.getData().then((response) => {
-      arr.value = response.data;
-      filteredArr.value = response.data;
+    store.getData().then((response) => {
+      store.catalog = response.data;
+      items.value = response.data;
       update();
     })
   });
@@ -36,17 +36,6 @@
   onUpdated(() => {
     update();
   })
-
-  const onFilter = () => {
-    var filterObj = JSON.parse(props.filter);
-    filteredArr.value = filteredArr.value.filter(item => item.price >= filterObj.minPrice && item.price <= filterObj.maxPrice);
-  }
-
-  const clearFilter = () => {
-    filteredArr.value = arr.value;
-  }
-
-  const catalogStore = useCatalogStore()
 </script>
 
 <template>
@@ -54,12 +43,12 @@
     <v-item-group selected-class="bg-primary">
       <v-row>
         <v-col
-          v-for="item in filteredArr"
+          v-for="item in items"
           :key="item.id"
           cols="12"
           md="3"
         >
-          <ProductCard :product="item" @add-to-basket="emit('addToBasket', $event)"/>
+          <ProductItem :product="item" @add-to-basket="emit('addToBasket')"/>
         </v-col>
       </v-row>
     </v-item-group>

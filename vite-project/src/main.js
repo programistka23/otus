@@ -34,10 +34,7 @@ const routes = [
   { path: '/', component: ContentComponent },
   { path: '/MainPage', component: ContentComponent, props: route => ({ search: route.query.search, filter: route.query.filter })},
   { path: '/New', component: Product, meta: { requiresAuth: true } },
-  { path: '/Basket',
-    component: Basket,
-    props: route => ({ basket: route.query.basket })
-  },
+  { path: '/Basket', component: Basket },
   { path: '/Product/:id', component: ProductPage, meta: { requiresAuth: true } },
 ]
 const router = createRouter({

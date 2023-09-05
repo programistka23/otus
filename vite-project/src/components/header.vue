@@ -1,6 +1,9 @@
 <script setup>
   import { ref, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
+  import { useStore } from "../stores/store.js";
+
+  const store = useStore();
 
   const emit = defineEmits(["toogleSidebar", "search", "logout", "showAuth", "filter"]);
 
@@ -15,7 +18,6 @@
   const props = defineProps({
     user: Object,
     balance:  Number,
-    basket: Array,
   })
 
   const searchValue = ref("");
@@ -106,14 +108,14 @@
         <v-spacer></v-spacer>
       </template>
 
-      <span style="color: white;">User: {{ props.user.auth ? props.user.auth.login : 'Not authorized'}}
+      <span style="color: white;">User: {{ (props.user.auth && props.user.auth.login) ? props.user.auth.login : 'Not authorized'}}
         <v-btn v-if="props.user.auth" icon="mdi-logout" @click="emit('logout');"></v-btn>
         <v-btn v-else icon="mdi-login" @click="emit('showAuth');"></v-btn>
       </span>
 
       <span style="color: white">Balance: {{props.balance}} $</span>
 
-      <v-btn icon class="basket-btn" @click="$router.push('/Basket?basket=' + JSON.stringify(props.basket));">
+      <v-btn icon class="basket-btn" @click="$router.push('/Basket');">
         <v-icon size="x-large">mdi-basket</v-icon>
       </v-btn>
     </v-toolbar>
