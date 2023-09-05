@@ -2,6 +2,7 @@
   import { ref, onMounted, watch, onUpdated } from 'vue'
   import ProductCard from './productItem.vue'
   import axios from 'axios'
+  import { useCatalogStore } from "../stores/catalog";
 
   const emit = defineEmits("addToBasket");
 
@@ -25,13 +26,11 @@
   }
 
   onMounted(() => {
-    axios
-      .get('https://fakestoreapi.com/products')
-      .then((response) => {
-        arr.value = response.data;
-        filteredArr.value = response.data;
-        update();
-      });
+    catalogStore.getData().then((response) => {
+      arr.value = response.data;
+      filteredArr.value = response.data;
+      update();
+    })
   });
 
   onUpdated(() => {
@@ -46,6 +45,8 @@
   const clearFilter = () => {
     filteredArr.value = arr.value;
   }
+
+  const catalogStore = useCatalogStore()
 </script>
 
 <template>

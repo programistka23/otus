@@ -11,6 +11,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import { createPinia } from 'pinia'
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -55,5 +57,7 @@ router.beforeEach((to, from, next) => {
 })
 
 app.use(router);
+
+app.use(createPinia())
 
 app.mount('#app');
