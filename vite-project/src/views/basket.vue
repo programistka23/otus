@@ -1,17 +1,16 @@
 <script setup>
   import { ref, onMounted } from "vue"
   import axios from "axios";
+  import { useStore } from "../stores/store";
 
-  const props = defineProps({
-    basket: Array
-  })
+  const store = useStore();
 
-  const emit = defineEmits("updateBasket", "order");
+  const emit = defineEmits("order");
 
   const basketItems = ref([]);
 
   onMounted(() => {
-    const basketArr = JSON.parse((props.basket));
+    const basketArr = store.basket;
     basketArr.forEach((item) => {
       axios
           .get('https://fakestoreapi.com/products/' + item.id)
@@ -35,8 +34,7 @@
         count: el.count
       })
     })
-    localStorage.setItem('basket', JSON.stringify(arr));
-    emit('updateBasket');
+    store.basket = arr;
   }
 </script>
 

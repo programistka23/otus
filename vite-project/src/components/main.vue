@@ -3,8 +3,11 @@
   import SidebarComponent from './sidebar.vue'
   import OrderComponent from './order.vue'
   import AuthComponent from './auth.vue'
+  import { useStore } from "../stores/store.js";
 
-  const emit = defineEmits("addToBasket", "updateBasket", "login", "closeAuth");
+  const store = useStore();
+
+  const emit = defineEmits("login", "closeAuth", "addToBasket");
 
   const props = defineProps({
     search: String,
@@ -19,10 +22,6 @@
   const isOrderDialog = ref(false);
   const isAuthDialog = ref(false);
 
-  const addToBasket = (product) => {
-    emit("addToBasket", product);
-  }
-
   onUpdated(() => {
     isAuthDialog.value = props.isAuth;
   })
@@ -36,8 +35,7 @@
                         @home-page="$router.push('/MainPage?search=' + props.search + (isFiltered ? 'filter={minPrice: ' + minPrice + ', maxPrice: ' + maxPrice + '}' : ''))"
                         @login="isAuthDialog = true;"
       />
-      <router-view @add-to-basket="addToBasket($event);"
-                   @update-basket="emit('updateBasket')"
+      <router-view @add-to-basket="emit('addToBasket');"
                    @order="isOrderDialog = true;"
                    :is-filtered="isFiltered"
                    :min-price="minPrice"
