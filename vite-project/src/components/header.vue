@@ -1,9 +1,6 @@
 <script setup>
   import { ref, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
-  import { useStore } from "../stores/store.js";
-
-  const store = useStore();
 
   const emit = defineEmits(["toogleSidebar", "search", "logout", "showAuth", "filter"]);
 
@@ -32,7 +29,10 @@
   const updateFilter = (isFilter) => {
     var filterStr = "";
     if (isFilter) {
-      filterStr = '&filter={' + '"minPrice":' + minPrice.value + ',"maxPrice":' + maxPrice.value + '}'
+      filterStr = '&filter={' + '"minPrice":' + (minPrice.value || -1) + ',"maxPrice":' + (maxPrice.value || -1) + '}'
+    } else {
+      minPrice.value = "";
+      maxPrice.value = "";
     }
     router.push('/MainPage?search=' + searchValue.value + filterStr)
   }

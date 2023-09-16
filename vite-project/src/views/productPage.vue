@@ -2,9 +2,9 @@
   import { ref, onMounted } from 'vue'
   import axios from "axios"
   import { useRoute } from "vue-router"
-  import { useStore } from "../stores/store.js";
+  import { useBasketStore } from "../stores/basketStore.js";
 
-  const store = useStore();
+  const basketStore = useBasketStore();
 
   const emit = defineEmits("addToBasket");
 
@@ -42,7 +42,7 @@
         <div style="width: 100px; margin-right: 20px">
           <v-text-field type="number" min="0" variant="outlined" v-model="product.count"></v-text-field>
         </div>
-        <v-btn variant="outlined" @click="store.addToBasket(product);emit('addToBasket');">В корзину</v-btn>
+        <v-btn variant="outlined" @click="basketStore.addToBasket(product);emit('addToBasket');">В корзину</v-btn>
       </v-card-actions>
     </v-card>
   </div>

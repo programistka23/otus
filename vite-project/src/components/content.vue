@@ -1,9 +1,12 @@
 <script setup>
   import { ref, onMounted, watch, onUpdated } from 'vue'
   import ProductItem from './productItem.vue'
-  import { useStore } from "../stores/store";
+  import Products from "../services/products.js";
+  import { useCatalogStore } from "../stores/catalogStore.js";
+  import { useFilterStore } from "../stores/filterStore.js";
 
-  const store = useStore();
+  const filterStore = useFilterStore();
+  const catalogStore = useCatalogStore();
 
   const emit = defineEmits("addToBasket");
 
@@ -15,19 +18,21 @@
   const items = ref([]);
 
   const update = () => {
+    var tmpArr = [];
     if (props.search) {
-      items.value = store.catalog.filter(item => item.title.toLowerCase().indexOf(props.search.toLowerCase()) > 0)
+      tmpArr = catalogStore.catalog.filter(item => item.title.toLowerCase().indexOf(props.search.toLowerCase()) > 0)
     } else {
-      items.value = store.catalog;
+      tmpArr = catalogStore.catalog;
     }
     if (props.filter) {
-      items.value = store.getFiltered(props.filter, items.value);
+      tmpArr = filterStore.getFiltered(props.filter, tmpArr);
     }
+    items.value = tmpArr;
   }
 
   onMounted(() => {
-    store.getData().then((response) => {
-      store.catalog = response.data;
+    Products.getData().then((response) => {
+      catalogStore.catalog = response.data;
       items.value = response.data;
       update();
     })

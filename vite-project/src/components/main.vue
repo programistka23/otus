@@ -3,9 +3,6 @@
   import SidebarComponent from './sidebar.vue'
   import OrderComponent from './order.vue'
   import AuthComponent from './auth.vue'
-  import { useStore } from "../stores/store.js";
-
-  const store = useStore();
 
   const emit = defineEmits("login", "closeAuth", "addToBasket");
 
