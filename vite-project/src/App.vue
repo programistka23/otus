@@ -4,9 +4,9 @@
   import MainComponent from './components/main.vue'
   import FooterComponent from './components/footer.vue'
   import { useRouter, useRoute } from 'vue-router'
-  import { useStore } from "./stores/store.js";
+  import { useUserStore } from "./stores/userStore.js";
 
-  const store = useStore();
+  const userStore = useUserStore();
 
   const balance = ref(100000);
   const isSidebar = ref(true);
@@ -17,14 +17,14 @@
   const router = useRouter();
 
   const login = (loginObj) => {
-    store.user.auth = loginObj;
+    userStore.user.auth = loginObj;
     localStorage.setItem("login", loginObj.login);
     isAuth.value = false;
     router.push('/New');
   }
 
   const logout = () => {
-    store.user.auth = {
+    userStore.user.auth = {
       login: "",
       password: ""
     };
@@ -33,7 +33,7 @@
 
   onMounted(() => {
     if (localStorage.getItem("login")) {
-      store.user.auth = {
+      userStore.user.auth = {
         login: localStorage.getItem("login"),
         password: ""
       }
@@ -45,13 +45,13 @@
   <div>
     <HeaderComponent @toogle-sidebar="isSidebar = !isSidebar"
                      @search="searchStr = $event"
-                     :user="store.user"
+                     :user="userStore.user"
                      :balance="balance"
                      @logout="logout();"
                      @showAuth="isAuth = true;"
     />
     <MainComponent :search = "searchStr"
-                   :user="store.user"
+                   :user="userStore.user"
                    :is-sidebar="isSidebar"
                    :is-auth="isAuth"
                    @add-to-basket="isAdded=true;"

@@ -1,7 +1,7 @@
 <script setup>
-  import { useStore } from "../stores/store";
+  import { useBasketStore } from "../stores/basketStore.js";
 
-  const store = useStore();
+  const basketStore = useBasketStore();
 
   const emit = defineEmits("addToBasket");
 
@@ -25,7 +25,7 @@
         :src="props.product.image"
       ></v-img>
       <div class="price">{{props.product.price}} $</div>
-      <v-btn class="buyBtn" @click.stop="store.addToBasket(props.product); emit('addToBasket');">В корзину</v-btn>
+      <v-btn class="buyBtn" @click.stop="basketStore.addToBasket(props.product); emit('addToBasket');">В корзину</v-btn>
     </v-card>
   </v-item>
 </template>
